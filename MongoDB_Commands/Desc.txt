@@ -1,0 +1,152 @@
+MongoDB In 30 Minutes
+Traversy Media
+
+YOu'll install MongoDB, forin version 3.2.9:
+mongodb-win32-x86_64-2008plus-ssl-3.2.9-signed
+
+But you can change the path as 
+c:\mongodb
+
+Create the folders: 
+c:\mongodb\data
+c:\mongodb\data\db
+c:\mongodb\log
+
+Go to a cmd:
+> cd mongodb\bin
+
+and install service: 
+> mongod --directoryperdb --dbpath c:\mongodb\data\db --logpath c:\mongodb\mongo.log --logappend --rest --install
+
+and start service
+> net start mongodb
+
+and next: 
+> cls 
+> show dbs
+local  0.000GB
+> use mycustomers
+switched to db mycustomers
+> db
+mycustomers
+
+Create user by MongoDb method: https://docs.mongodb.com/manual/reference/method/db.createUser/
+> db.createUser({
+... user: "brad",
+... pwd: "1234",
+... roles: [ "readWrite", "dbAdmin" ]
+... });
+Successfully added user: { "user" : "brad", "roles" : [ "readWrite", "dbAdmin" ] }
+
+> db.createCollection('customers');
+{ "ok" : 1 }
+> show collections
+customers
+
+> db.customers.insert({ first_name: "John", last_name: "Doe" });
+> db.customers.find();
+
+> db.customers.insert([{ first_name: "Steven", last_name: "Smith" }, { first_name: "Joan", last_name: "Jonshon", gender: "female" }]);> db.customers.find();
+> db.customers.find();
+{ "_id" : ObjectId("5b9b7a577ed1c90e1d028ad7"), "first_name" : "John", "last_name" : "Doe" }
+{ "_id" : ObjectId("5b9b81357ed1c90e1d028ad8"), "first_name" : "Steven", "last_name" : "Smith" }
+{ "_id" : ObjectId("5b9b81987ed1c90e1d028ad9"), "first_name" : "Joan", "last_name" : "Johnson", "gender" : "female" }
+
+> db.customers.find().pretty();
+{
+        "_id" : ObjectId("5b9b7a577ed1c90e1d028ad7"),
+        "first_name" : "John",
+        "lsst_name" : "Doe"
+}
+{
+        "_id" : ObjectId("5b9b81357ed1c90e1d028ad8"),
+        "first_name" : "Steven",
+        "last_name" : "Smith"
+}
+{
+        "_id" : ObjectId("5b9b81987ed1c90e1d028ad9"),
+        "first_name" : "Joan",
+        "lsst_name" : "Johnson",
+        "gender" : "female"
+}
+
+
+> db.customers.update({first_name: "John"},{first_name: "John", last_name: "Doe", gender: "male"});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.customers.find().pretty();
+{
+        "_id" : ObjectId("5b9b7a577ed1c90e1d028ad7"),
+        "first_name" : "John",
+        "last_name" : "Doe",
+        "gender" : "male"
+}
+{
+        "_id" : ObjectId("5b9b81357ed1c90e1d028ad8"),
+        "first_name" : "Steven",
+        "last_name" : "Smith"
+}
+{
+        "_id" : ObjectId("5b9b81987ed1c90e1d028ad9"),
+        "first_name" : "Joan",
+        "lsst_name" : "Johnson",
+        "gender" : "female"
+}
+
+> db.customers.update({first_name: "Steven"},{$set:{gender: "male"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.customers.find().pretty();
+....
+{
+        "_id" : ObjectId("5b9b81357ed1c90e1d028ad8"),
+        "first_name" : "Steven",
+        "last_name" : "Smith",
+        "gender" : "male"
+}
+....
+
+> db.customers.update({first_name: "Steven"},{$inc:{age: 5}});
+> db.customers.find().pretty();
+        "age" : 5
+
+		
+> db.customers.update({first_name: "Steven"}, {$unset: {age: 1}})
+> db.customers.find().pretty();
+....
+{
+        "_id" : ObjectId("5b9b81987ed1c90e1d028ad9"),
+        "first_name" : "Joan",
+        "last_name" : "Jonson",
+        "gender" : "female"
+}
+		
+
+> db.customers.update({first_name: "Mary"},{first_name: "Mary", last_name: "Samson"},{upsert: true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("5b9b8ce0e213af28c2183afe")
+})
+
+
+
+> db.customers.fin> db.customers.update({first_name: "Steven"}, {$rename: {"gender" : "sex"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+
+> db.customers.remove({first_name: "Steven"});
+WriteResult({ "nRemoved" : 1 })
+
+
+> db.customers.find({age: {$lt: 40}}).pretty();
+{
+        "_id" : ObjectId("5b9b8ce0e213af28c2183afe"),
+        "first_name" : "Mary",
+        "last_name" : "Samson",
+        "age" : 35
+}
+
+> db.customers.find().count();
+
+
+
