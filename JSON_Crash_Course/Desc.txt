@@ -1,0 +1,26 @@
+JSON_Crash_Course
+
+You can create index.html and people.json.
+You can use the code: 
+	Sending an XMLHttpRequest
+	A common JavaScript syntax for using the XMLHttpRequest object looks much like this:
+	Example
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+			   // Typical action to be performed when the document is ready:
+			   document.getElementById("demo").innerHTML = xhttp.responseText;
+			}
+		};
+		xhttp.open("GET", "filename", true);
+		xhttp.send();
+from: https://www.w3schools.com/xml/xml_http.asp
+
+You'll install live-server: 
+npm install -g live-server
+
+and run it (defaulton 127.0.0.1:8080):  
+live-server
+
+Code for this: 
+https://www.youtube.com/redirect?redir_token=0Wg57r__uY6-hJoU1Cl_qwkVcxp8MTUzNjk5Njc0M0AxNTM2OTEwMzQz&q=http%3A%2F%2Ftraversymedia.com%2Fdownloads%2Fjson_sandbox.zip&v=wI1CWzNtE-M&event=video_description
