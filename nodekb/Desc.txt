@@ -1,6 +1,9 @@
 Nodejs Express From Scratch [Part 1-12]
 Traversy Media
 
+
+EX: 2  
+----------------------------------
 Create diresctory 'nodekb' and create a package.json file by
 > npm init
 
@@ -26,4 +29,8 @@ to run automatically app by:
 
 Next install dependencies:
   > npm install --save Express
-  
+
+
+EX: 3
+----------------------------------
+npm install pug --save

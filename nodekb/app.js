@@ -1,13 +1,20 @@
 const express = require('express');
-const app = express();
 const port = 3000;
+const path = require('path');
 
-//app.get('/', (req, res) => res.send('Hello World!'));
+// Init app
+const app = express();
+
+// Load View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
+//Home route
 app.get('/', function(req, res){
-  res.send('Hello World!');
+  res.render('index');
 });
 
-//app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+/// Start server
 app.listen(port, function(){
   console.log('Example app listening on port 3000!');
 });
