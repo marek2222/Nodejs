@@ -39,4 +39,23 @@ npm install pug --save
 EX: 4
 ----------------------------------
 npm install --save mongoose
+
+
+EX: 5. Save article to MongoDb
+----------------------------------
+npm install --save mongoose
 npm install --save body-parser
+
+Formatowanie i kolorowanie dla Atoma
+apm install atom-beautify
+
+
+EX: 6. Bower
+----------------------------------
+> npm install -g bower
+To install latest version npm:
+> npm install npm@latest -g
+
+Create public directory: public/bower_components
+> bower install bootstrap
+> bower install jQuery
