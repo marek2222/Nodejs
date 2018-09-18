@@ -58,7 +58,7 @@ app.get('/', function(req, res){
 app.get('/article/:id', function(req, res){
   Article.findById(req.params.id, function(err, article){
     res.render('article', {
-      article:article
+      article: article
     });
   });
 });
@@ -87,46 +87,17 @@ app.post('/articles/add', function(req, res){
   });
 });
 
-// UPDATE form
+// Load Edit form
 app.get('/article/edit/:id', function(req, res){
   Article.findById(req.params.id, function(err, article){
     res.render('edit_article', {
-      title:'Edit Article',
-      article:article
+      title: 'Edit Article',
+      article: article
     });
   });
 });
 
-// Update Submit POST Route
-app.post('/articles/edit/:id', function(req, res){
-  let article = {};
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
 
-  let query = {_id:req.params.id};
-
-  Article.update(query, article ,function(err){
-    if(err){
-      console.log(err);
-      return;
-    } else {
-      res.redirect('/');
-    }
-  });
-});
-
- app.delete('/article/:id', function(req, res){
-   let query = {id:req.param.id}
-
-   // collecion.remove is deprecated. Use deleteOne, deleteMany or BulkWrite instead.
-   Article.deleteOne(query, function(err){
-     if (err) {
-       console.log(err);
-     }
-     res.send('Success');
-   });
- });
 
 
 
