@@ -52,6 +52,8 @@ apm install atom-beautify
 
 EX: 6. Bower
 ----------------------------------
+https://html2jade.org/
+
 > npm install -g bower
 To install latest version npm:
 > npm install npm@latest -g
@@ -59,3 +61,11 @@ To install latest version npm:
 Create public directory: public/bower_components
 > bower install bootstrap
 > bower install jQuery
+
+
+EX: 7. Messages
+----------------------------------
+> npm install --save express-messages express-session connect-flash express-validator
+https://www.npmjs.com/package/express-session
+https://github.com/expressjs/express-messages
+https://github.com/express-validator/express-validator

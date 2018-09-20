@@ -2,6 +2,12 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+//const { check, validationResult } = require('express-validator/check');
+//const { sanitizeBody } = require('express-validator/filter');
+const flash = require('connect-flash');
+const session = require('express-session');
+
 
 mongoose.connect('mongodb://localhost/nodekb');
 let db = mongoose.connection;
@@ -32,13 +38,45 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-// create application/json parser
-var jsonParser = bodyParser.json();
-// create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // Set Public folder: to images, Css, files
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+// Express Session Middleware
+// app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+  //,cookie: { secure: true }
+}));
+
+// Express Messages Middleware
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
 
 //Home route
 app.get('/', function(req, res){
@@ -72,20 +110,44 @@ app.get('/articles/add', function(req, res){
 });
 
 // Add Submit POST Route
-app.post('/articles/add', function(req, res){
-  let article = new Article();
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
-  article.save(function(err){
-    if(err){
-      console.log(err);
-      return;
-    } else {
-      res.redirect('/');
-    }
-  });
+app.post('/articles/add',
+//  [
+//   check('title').not().isEmpty().withMessage('Title is required'),
+//   check('author').not().isEmpty().withMessage('Author is required'),
+//   check('Body').not().isEmpty().withMessage('Body is required')
+// ],
+function(req, res){
+  req.checkBody('title','Title is required').notEmpty();
+  req.checkBody('author','Author is required').notEmpty();
+  req.checkBody('body','Body is required').notEmpty();
+
+  // Get error
+  let errors = req.validationErrors();
+  if (errors) {
+    res.render('add_article', {
+      title: 'Add Article',
+      errors: errors
+    });
+  }
+  else {
+    let article = new Article();
+    article.title = req.body.title;
+    article.author = req.body.author;
+    article.body = req.body.body;
+
+    article.save(function(err){
+      if(err){
+        console.log(err);
+        return;
+      } else {
+        req.flash('success', 'Article Added');
+        res.redirect('/');
+      }
+    });
+  }
 });
+
+
 
 // UPDATE form
 app.get('/article/edit/:id', function(req, res){
@@ -111,22 +173,25 @@ app.post('/articles/edit/:id', function(req, res){
       console.log(err);
       return;
     } else {
+      req.flash('success', 'Article Updated');
       res.redirect('/');
     }
   });
 });
 
- app.delete('/article/:id', function(req, res){
-   let query = {id:req.param.id}
-
-   // collecion.remove is deprecated. Use deleteOne, deleteMany or BulkWrite instead.
-   Article.deleteOne(query, function(err){
-     if (err) {
-       console.log(err);
-     }
-     res.send('Success');
-   });
- });
+// Delete Article
+app.delete('/article/:id', function(req, res){
+  let query = {_id:req.params.id};
+  console.log('id:'+query);
+  // collecion.remove is deprecated. Use deleteOne, deleteMany or BulkWrite instead.
+  Article.deleteOne(query, function(err){
+    if (err) {
+     console.log(err);
+    }
+    req.flash('success', 'Article Deleted');
+    res.send('Success');
+  });
+});
 
 
 
