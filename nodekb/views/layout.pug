@@ -8,15 +8,22 @@ html
     nav.navbar.navbar-expand-md.navbar-dark.bg-dark
       //- .fixed-top
       a.navbar-brand(href='/') KnowledgeBase
-      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navDefault', aria-controls='navDefault', aria-expanded='false', aria-label='Toggle navigation')
         span.navbar-toggler-icon
-      #navbarsExampleDefault.collapse.navbar-collapse
+      #navDefault.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
           li.nav-item.active
             a.nav-link(href='/')| Home
               span.sr-only (current)
           li.nav-item
             a.nav-link(href='/articles/add') Add Article
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link(href='/users/register') Register
+          li.nav-item.text-nowrap
+            a.nav-link(href='/users/login') Login
+            //- a.nav-link.btn-sm.btn-outline-secondary(href='/users/login') Login
+          
           //- li.nav-item
           //-   a.nav-link.disabled(href='#') Disabled
           //- li.nav-item.dropdown
@@ -38,7 +45,7 @@ html
       br
       hr
       footer
-        p Copyright &copy; 2017
+        p Copyright &copy; 2018
     script(src='/bower_components/jQuery/dist/jquery.js')
     script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
     script(src='/js/main.js')

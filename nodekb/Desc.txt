@@ -69,3 +69,8 @@ EX: 7. Messages
 https://www.npmjs.com/package/express-session
 https://github.com/expressjs/express-messages
 https://github.com/express-validator/express-validator
+
+
+EX: 9. User registaration
+----------------------------------
+> npm install --save passport passport-local bcryptjs
