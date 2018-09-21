@@ -88,8 +88,8 @@ router.delete('/:id', function(req, res){
 
   let query = {_id:req.params.id}
 
-  Article.findById(req.params.id, function(err, article){
-    if(article.author != req.user._id){
+  Article.findById(req.param.id, function(err, article){
+    if (article.author != req.user._id) {
       res.status(500).send();
     } else {
       // collecion.remove is deprecated. Use deleteOne, deleteMany or BulkWrite instead.
@@ -97,6 +97,7 @@ router.delete('/:id', function(req, res){
         if (err) {
          console.log(err);
         }
+        req.flash('success', 'Article Deleted');
         res.send('Success');
       });
     }
