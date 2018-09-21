@@ -7,9 +7,10 @@ const expressValidator = require('express-validator');
 //const { sanitizeBody } = require('express-validator/filter');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
+const config = require('./config/database');
 
-
-mongoose.connect('mongodb://localhost/nodekb');
+mongoose.connect(config.database);
 let db = mongoose.connection;
 
 // Check connection
@@ -78,6 +79,12 @@ app.use(expressValidator({
 }));
 
 
+// Passport config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 //Home route
 app.get('/', function(req, res){
   Article.find({}, function(err, articles){
@@ -92,103 +99,12 @@ app.get('/', function(req, res){
   });
 });
 
-// Get single Articles
-app.get('/article/:id', function(req, res){
-  Article.findById(req.params.id, function(err, article){
-    res.render('article', {
-      article:article
-    });
-  });
-});
 
-
-// Add Route
-app.get('/articles/add', function(req, res){
-  res.render('add_article', {
-    title:'Add Article'
-  });
-});
-
-// Add Submit POST Route
-app.post('/articles/add',
-//  [
-//   check('title').not().isEmpty().withMessage('Title is required'),
-//   check('author').not().isEmpty().withMessage('Author is required'),
-//   check('Body').not().isEmpty().withMessage('Body is required')
-// ],
-function(req, res, next){
-  // Get error
-  let errors = req.validationErrors();
-  if (errors) {
-    res.render('add_article', {
-      title: 'Add Article',
-      errors: errors
-    });
-  }
-  else {
-    let article = new Article();
-    article.title = req.body.title;
-    article.author = req.body.author;
-    article.body = req.body.body;
-
-    article.save(function(err){
-      if(err){
-        console.log(err);
-        return;
-      } else {
-        req.flash('success', 'Article Added');
-        res.redirect('/');
-      }
-    });
-  }
-});
-
-
-
-// UPDATE form
-app.get('/article/edit/:id', function(req, res){
-  Article.findById(req.params.id, function(err, article){
-    res.render('edit_article', {
-      title:'Edit Article',
-      article:article
-    });
-  });
-});
-
-// Update Submit POST Route
-app.post('/articles/edit/:id', function(req, res){
-  let article = {};
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
-
-  let query = {_id:req.params.id};
-
-  Article.update(query, article ,function(err){
-    if(err){
-      console.log(err);
-      return;
-    } else {
-      req.flash('success', 'Article Updated');
-      res.redirect('/');
-    }
-  });
-});
-
-// Delete
-app.delete('/article/:id', function(req, res){
-  let query = {id:req.param.id};
-  // collecion.remove is deprecated. Use deleteOne, deleteMany or BulkWrite instead.
-  Article.deleteOne(query, function(err){
-    if (err) {
-     console.log(err);
-    }
-    res.send('Success');
-  });
-});
-
-
-
+// Route files
+let articles = require('./routes/articles');
+let users = require('./routes/users');
+app.use('/articles', articles);
+app.use('/users', users);
 
 
 // Start Server
