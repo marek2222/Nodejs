@@ -1,0 +1,145 @@
+Building and publishing an NPM Typescript package.
+https://itnext.io/step-by-step-building-and-publishing-an-npm-typescript-package-44fe7164964c
+
+
+Here's how to setup a quick Node.js project:
+- Setup a Node.js project package.json. Quick one : npm init -y
+- Add TypeScript (npm install typescript --save-dev)
+
+- We also need a 'tsconfig.json' file so let’s add it to the project root:
+        {
+        "compilerOptions": {
+            "target": "es5",
+            "module": "commonjs",
+            "declaration": true,
+            "outDir": "./lib",
+            "strict": true
+        },
+        "include": ["src"],
+        "exclude": ["node_modules", "**/__tests__/*"]
+        }
+
+- Let’s create a src folder in the root and add an index.ts file:
+    export const Greeter = (name: string) => `Hello ${name}`; 
+
+- Next step is to add a build script to package.json:
+    "build" : "tsc"
+
+- Now you can run the build command in the console:
+    > npm run build
+  And violá!
+  You will see a new lib folder in the root with your compiled code and type definitions!
+
+
+
+Formatting and Linting
+-----------------------------------
+Like Typescript, these are tools used only for the development of the package.
+They should be added as devDependencies:
+        > npm install --save-dev prettier tslint tslint-config-prettier
+tslint-config-prettier is a preset we need since it prevents conflicts between tslint 
+and prettiers formatting rules.
+
+In the root, add a tslint.json:
+        {
+        "extends": ["tslint:recommended", "tslint-config-prettier"]
+        }
+And a .prettierrc
+        {
+        "printWidth": 120,
+        "trailingComma": "all",
+        "singleQuote": true
+        }
+
+And as a last step add the lint- and format scripts to package.json
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json"
+
+Now you can run npm run lint and npm run format in the console:
+        > npm run lint
+        > npm run format
+
+
+
+The magic .npmignore file
+-----------------------------------
+When you building a package you not only need an .gitignore file, you need an .npmingore file as well!
+Why?
+The .gitignore file tells git which file should be ignored from source control and .npmignore tells npm which files should be ignored when you are publishing a package.
+Example:
+We don’t want the lib folder to be under source control since it auto-generated, but it has to be included when publishing the package. The opposite goes for the src folder. We want it to be under source control but it’s not needed in the published package.
+
+Let’s create an .npmignore file
+    src
+    tsconfig.json
+    tslint.json
+    .prettierrc
+
+As you can see we ignore config files for our dev-tools. They are not needed in the published package.
+
+
+Setup Testing with Jest
+-----------------------------------
+An awesome package should include unit tests! 
+    > npm install --save-dev jest ts-jest @types/jest
+
+Then we can just ignore the config file in .npmignore. 😃
+Create a new file in the root and name it jestconfig.json:
+        {
+        "transform": {
+            "^.+\\.(t|j)sx?$": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+        "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+        }
+
+Remove the old test script in package.json and change it to:
+"test": "jest --config jestconfig.json",
+
+Write a basic test
+It’s time to write our first test! 😃
+In the src folder, add a new folder called __tests__ and inside, add a new file with a name you like, but it has to end with test.ts, for example Greeter.test.ts
+        import { Greeter } from '../index';
+        test('My Greeter', () => {
+        expect(Greeter('Carl')).toBe('Hello Carl');
+        });
+
+Ok, so the only thing we are doing here is to verify that Our method Greeter will return Hello Carl if the input is Carl.
+Now, Try to run
+        > npm test
+
+
+
+Use the magic scripts in NPM
+-----------------------------------
+For an awesome package, we should of course automate as much as possible. We’re about to dig into some scripts 
+in npm: prepare, prepublishOnly, preversion, version and postversion
+
+prepare will run both BEFORE the package is packed and published, and on local npm install. Perfect for running building the code. Add this script to package.json
+        "prepare" : "npm run build"
+
+prepublishOnly will run BEFORE prepare and ONLY on npm publish. Here we will run our test and lint to make sure we don’t publish bad code:
+        "prepublishOnly" : "npm test && npm run lint"
+
+preversion will run before bumping a new package version. To be extra sure that we’re not bumping a version with bad code, why not run lint here as well? 😃
+        "preversion" : "npm run lint"
+
+Version will run after a new version has been bumped. If your package has a git repository, like in our case. A commit and a new version-tag will be made every time you bump a new version. This command will run BEFORE the commit is made. One idea is to run the formatter here and so no ugly code will pass into the new version:
+        "version" : "npm run format && git add -A src"
+
+Postversion will run after the commit has been made. A perfect place for pushing the commit as well as the tag.
+        "postversion" : "git push && git push --tags"
+
+This is how my scripts section in package.json looks like:
+"scripts": {
+   "test": "jest --config jestconfig.json",
+   "build": "tsc",
+   "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+   "lint": "tslint -p tsconfig.json",
+   "prepare": "npm run build",
+   "prepublishOnly": "npm test && npm run lint",
+   "preversion": "npm run lint",
+   "version": "npm run format && git add -A src",
+   "postversion": "git push && git push --tags"
+}
+
