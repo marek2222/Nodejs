@@ -1,0 +1,63 @@
+How do Express.js Sessions work?
+https://nodewebapps.com/2017/06/18/how-do-nodejs-sessions-work/
+
+and
+
+Access SQL Server with Nodejs Tutorial
+http://www.javascriptpoint.com/access-mssql-nodejs-tutorial/
+
+
+
+Create node server with express and acces to SqlServer
+-------------------------------
+First create a database 'nodejs', and next table: 
+
+CREATE TABLE [dbo].[_1_Student](
+    [Id] [bigint] NULL,
+    [Name] [nvarchar](50) NULL,
+    [RollNumber] [bigint] NULL
+);
+
+Now insert some data to your table Student.
+INSERT INTO dbo._1_Student values(1,'Billy John',10001);
+INSERT INTO dbo._1_Student values(2,'Smith George',10002);
+INSERT INTO dbo._1_Student values(3,'Ernest Cook',10003);
+INSERT INTO dbo._1_Student values(4,'Marshall Ballard',10004);
+INSERT INTO dbo._1_Student values(5,'Joann Riley',10005);
+INSERT INTO dbo._1_Student values(6,'Pearl Pearson',10006);
+
+Let's initialize new project:
+    > npm init
+
+install dependencies: 
+    -   express and 
+    -   mssql (for all systems) or msnodesqlv8 (native Windows with authentication)
+    > npm install express msnodesqlv8 --save
+
+Write code to running server and return the data in json by query: 
+    select * from [_1_Student]
+for default get endpoint '/'.
+
+Now let's create procedure on sql server by follow:
+    CREATE PROCEDURE dbo._1_GetAllStudents 
+    AS 
+        SELECT Id,Name,RollNumber FROM dbo._1_Student;
+    
+    EXECUTE dbo._1_GetAllStudents;
+
+Then write a code to return a data from storage procedure for endpoint '/sp': 
+    dbo._1_GetAllStudents
+
+
+Manage Session data:
+-------------------------------
+Sessions can store their information in different ways. The popular ways to store session data is:
+-    In application memory
+-    In a cookie
+-    In a memory cache
+-    In a database
+
+Install  express-session:
+    > npm install --save express-session
+
+and write code with 'express-session' to handle the sessions.

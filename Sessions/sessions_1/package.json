@@ -1,0 +1,19 @@
+{
+  "name": "sessions_1",
+  "version": "1.0.0",
+  "description": "http://www.javascriptpoint.com/access-mssql-nodejs-tutorial/",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "marek2222",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "msnodesqlv8": "^0.6.8",
+    "mssql": "^4.2.1",
+    "nodemon": "^1.18.4"
+  }
+}
