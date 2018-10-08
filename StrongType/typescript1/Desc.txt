@@ -3,8 +3,10 @@ https://itnext.io/step-by-step-building-and-publishing-an-npm-typescript-package
 
 
 Here's how to setup a quick Node.js project:
-- Setup a Node.js project package.json. Quick one : npm init -y
-- Add TypeScript (npm install typescript --save-dev)
+- Setup a Node.js project package.json. Quick one : 
+        > npm init -y
+- Add TypeScript 
+        > npm install typescript --save-dev
 
 - We also need a 'tsconfig.json' file so let’s add it to the project root:
         {
@@ -12,7 +14,7 @@ Here's how to setup a quick Node.js project:
             "target": "es5",
             "module": "commonjs",
             "declaration": true,
-            "outDir": "./lib",
+            "outDir": "./dist",
             "strict": true
         },
         "include": ["src"],
@@ -28,7 +30,7 @@ Here's how to setup a quick Node.js project:
 - Now you can run the build command in the console:
     > npm run build
   And violá!
-  You will see a new lib folder in the root with your compiled code and type definitions!
+  You will see a new 'dist' folder in the root with your compiled code and type definitions!
 
 
 
@@ -67,7 +69,7 @@ When you building a package you not only need an .gitignore file, you need an .n
 Why?
 The .gitignore file tells git which file should be ignored from source control and .npmignore tells npm which files should be ignored when you are publishing a package.
 Example:
-We don’t want the lib folder to be under source control since it auto-generated, but it has to be included when publishing the package. The opposite goes for the src folder. We want it to be under source control but it’s not needed in the published package.
+We don’t want the dist folder to be under source control since it auto-generated, but it has to be included when publishing the package. The opposite goes for the src folder. We want it to be under source control but it’s not needed in the published package.
 
 Let’s create an .npmignore file
     src
@@ -142,4 +144,30 @@ This is how my scripts section in package.json looks like:
    "version": "npm run format && git add -A src",
    "postversion": "git push && git push --tags"
 }
+
+
+Publish you package to NPM!
+-----------------------------------
+In order to publish your package, you need to create an NPM account. 
+If you don’t have an account you can do so on https://www.npmjs.com/signup
+or run the command: npm adduser
+
+If you already have an account, run npm login to login to you NPM account.
+        > npm login
+
+Logging in to my existing NPM account
+Alright! Now run publish.
+        > npm publish
+
+As you can see the package will first be built by the prepare script, then test and lint will run 
+by the prepublishOnly script before the package is published.
+
+As you can see the package will first be built by the prepare script, then test and lint will run by the prepublishOnly script before the package is published.
+
+
+View your package
+Now browse your package on npmjs. The url is 
+        https://npmjs.com/package/<your-package-name> in my case it is
+        https://npmjs.com/package/my-awesome-greeter
+
 

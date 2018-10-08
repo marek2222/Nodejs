@@ -1,8 +1,9 @@
 {
     "name": "typescript1",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "description": "A nice greeter",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "test": "jest --config jestconfig.json",
         "build": "tsc",
@@ -13,7 +14,8 @@
         "preversion": "npm run lint",
         "version": "npm run format && git add -A src",
         "postversion": "git push && git push --tags"
-         },
+    },
+    "keywords": ["Hello", "Greeter"],
     "author": "marek2222",
     "license": "ISC",
     "devDependencies": {
