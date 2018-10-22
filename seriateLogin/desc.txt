@@ -1,0 +1,30 @@
+Create directory 'seriateLogin' and create a package.json file by
+    > npm init -y
+
+In package.json add in  "scripts":
+    "start": "node app.js"
+to run automatically app by:
+  > npm start
+
+
+Next install dependencies:
+  > npm install --save express
+
+npm install pug --save
+npm install nodemon --save-dev
+
+npm install body-parser --save
+
+
+
+
+// bcryptjs 
+// body-parser 
+// connect-flash 
+// express
+// express-messages 
+// express-session
+// express-validator
+// passport
+// passport-local
+// pug
