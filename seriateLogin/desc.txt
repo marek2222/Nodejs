@@ -34,6 +34,15 @@ Body Parser Middleware
     > npm install --save body-parser
 
 
+----------------------------------
+    > npm install -g bower
+To install latest version npm:
+    > npm install npm@latest -g
+
+Create public directory: public/bower_components
+    > bower install bootstrap
+    > bower install jquery
+
 
 // bcryptjs 
 // body-parser 
