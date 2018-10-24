@@ -94,7 +94,7 @@ app.get('/artykul/edycja/:id', function(req, res){
         }
     }).then( function(results){
         res.render('artykulEdycja', {
-            title:'Edycja Artykułu',
+            title:'Edycja artykułu',
             artykul: results[0]
         });
     }, function (err){
@@ -120,16 +120,10 @@ app.post('/artykul/edycja/:id', function(req, res){
 });
 
 app.delete('/artykul/:id', function(req, res){
-    let id = {id:req.param.id}
-
     sql.execute({
         query: sql.fromFile('./sql/artykulUsun'),
         params: {
-            id: {
-				type: sql.INT,
-                nullable: false,
-                val: id
-            }
+            id:     { type: sql.INT,  val: req.params.id  }
         }
     }).then( function(results){
         res.send('Success');
