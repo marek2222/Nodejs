@@ -6,7 +6,7 @@ $(document).ready(function(){
         console.log(id);
         $.ajax({
             type: 'DELETE',
-            url: '/artykul/'+ id,
+            url: '/artykuly/'+ id,
             success: function(response){
                 alert('Usunięto artykuł: ' + id);
                 window.location.href='/';
