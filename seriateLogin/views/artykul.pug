@@ -4,3 +4,5 @@ block content
     h1= artykul.tytul
     h5 Napisany przez #{artykul.autor}
     p= artykul.cialo
+    hr
+    a.btn.btn-light(href='/artykul/edycja/'+ artykul.id) Edycja  

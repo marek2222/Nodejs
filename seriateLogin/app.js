@@ -87,30 +87,35 @@ app.post('/artykul/dodaj', function(req, res){
 
 // UPDATE form
 app.get('/artykul/edycja/:id', function(req, res){
-    Article.findById(req.params.id, function(err, article){
+    sql.execute({
+        query: sql.fromFile('./sql/artykul'),
+        params: {
+            id: {	type: sql.INT, val: req.params.id }
+        }
+    }).then( function(results){
         res.render('artykulEdycja', {
-            title:'Edit Article',
-            article:article
+            title:'Edycja Artykułu',
+            artykul: results[0]
         });
+    }, function (err){
+        console.log ('Coś się stało:', err);
     });
 });
   
 // Update Submit POST Route
-app.post('/artykul/edit/:id', function(req, res){
-    let article = {};
-    article.title = req.body.title;
-    article.author = req.body.author;
-    article.body = req.body.body;
-
-    let query = {_id:req.params.id};
-
-    Article.update(query, article ,function(err){
-        if(err){
-            console.log(err);
-            return;
-        } else {
-            res.redirect('/');
+app.post('/artykul/edycja/:id', function(req, res){
+    sql.execute({
+        query: sql.fromFile('./sql/artykulEdytuj'), 
+        params: {
+            tytul:  { type: sql.NVARCHAR(50),  val: req.body.tytul }, 
+            autor: { type: sql.NVARCHAR(50),  val: req.body.autor }, 
+            cialo:  { type: sql.NVARCHAR(50),  val: req.body.cialo },
+            id:       { type: sql.INT,                       val: req.params.id }
         }
+    }).then( function(results){
+        res.redirect('/');
+    }, function (err){
+        console.log ('Coś się stało:', err);
     });
 });
 
