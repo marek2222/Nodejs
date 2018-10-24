@@ -9,9 +9,9 @@ begin
 	SET ANSI_NULLS ON;
 	SET QUOTED_IDENTIFIER ON;
 	CREATE TABLE nodejs.[dbo].[_b_Articles](
-		id		int  NULL, /*IDENTITY(1,1) NOT NULL,*/
-		tytul		nvarchar(50) NULL,
-		autor	   nvarchar(50) NULL,
+		id		int  NULL IDENTITY(1,1) NOT NULL,
+		tytul		nvarchar(20) NULL,
+		autor	   nvarchar(30) NULL,
 		cialo		nvarchar(50) NULL
 	) ON [PRIMARY];
 

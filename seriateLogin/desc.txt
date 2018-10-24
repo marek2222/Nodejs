@@ -43,14 +43,10 @@ Create public directory: public/bower_components
     > bower install bootstrap
     > bower install jquery
 
+You can use this:
+    https://html2jade.org/
 
-// bcryptjs 
-// body-parser 
-// connect-flash 
-// express
-// express-messages 
-// express-session
-// express-validator
-// passport
-// passport-local
-// pug
+    > npm install --save express-messages express-session connect-flash express-validator
+https://www.npmjs.com/package/express-session
+https://github.com/expressjs/express-messages
+https://github.com/express-validator/express-validator
