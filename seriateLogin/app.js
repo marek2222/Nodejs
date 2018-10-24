@@ -27,28 +27,44 @@ app.use(bodyParser.json());
 //Home route
 app.get('/', function(req, res){
     sql.execute({
-        query: sql.fromFile('./sql/baza')
+        query: sql.fromFile('./sql/artykuly')
     }).then( function(results){
         res.render('index', {
             tytul:'Artykuły', 
             artykuly: results
         });
     }, function (err){
-        console.log ('Something bad happened:', err);
+        console.log ('Coś się stało:', err);
+    });
+});
+
+// Get single Articles
+app.get('/artykul/:id', function(req, res){
+    sql.execute({
+        query: sql.fromFile('./sql/artykul'),
+        params: {
+            id: {	type: sql.INT, val: req.params.id }
+        }
+    }).then( function(results){
+        res.render('artykul', {
+            artykul: results[0]
+        });
+    }, function (err){
+        console.log ('Coś się stało:', err);
     });
 });
 
 // Add route
-app.get('/artykuly/dodaj', function(req, res){
-    res.render('dodaj_artykul', {
+app.get('/artykul/dodaj', function(req, res){
+    res.render('artykulDodaj', {
         tytul: 'Dodaj Artykuł'
     });
 });
 
 // Add Submit POST Route
-app.post('/artykuly/dodaj', function(req, res){
+app.post('/artykul/dodaj', function(req, res){
     sql.execute({
-        query: sql.fromFile('./sql/dodaj_artykul'),        // query: 'insert nodejs.dbo.[_b_Articles](tytul,autor,cialo) select tytul,autor,cialo from @tabela',
+        query: sql.fromFile('./sql/artykulDodaj'),        // query: 'insert nodejs.dbo.[_b_Articles](tytul,autor,cialo) select tytul,autor,cialo from @tabela',
         params: {
             tabela: {
                 val: [{   tytul: req.body.tytul, 
@@ -64,11 +80,58 @@ app.post('/artykuly/dodaj', function(req, res){
     }).then( function(results){
         res.redirect('/');
     }, function (err){
-        console.log ('Something bad happened:', err);
+        console.log ('Coś się stało:', err);
     });
 });
     
-    
+
+// UPDATE form
+app.get('/artykul/edycja/:id', function(req, res){
+    Article.findById(req.params.id, function(err, article){
+        res.render('artykulEdycja', {
+            title:'Edit Article',
+            article:article
+        });
+    });
+});
+  
+// Update Submit POST Route
+app.post('/artykul/edit/:id', function(req, res){
+    let article = {};
+    article.title = req.body.title;
+    article.author = req.body.author;
+    article.body = req.body.body;
+
+    let query = {_id:req.params.id};
+
+    Article.update(query, article ,function(err){
+        if(err){
+            console.log(err);
+            return;
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+app.delete('/artykul/:id', function(req, res){
+    let id = {id:req.param.id}
+
+    sql.execute({
+        query: sql.fromFile('./sql/artykulUsun'),
+        params: {
+            id: {
+				type: sql.INT,
+                nullable: false,
+                val: id
+            }
+        }
+    }).then( function(results){
+        res.send('Success');
+    }, function (err){
+        console.log ('Coś się stało:', err);
+    });
+});
     
  
 /// Start server
