@@ -80,7 +80,9 @@ app.get('/', function(req, res){
 
 // Route files
 let artykuly = require('./routes/artykuly');
+let uzytkownicy = require('./routes/uzytkownicy');
 app.use('/artykuly', artykuly);
+app.use('/uzytkownicy', uzytkownicy);
     
  
 /// Start server
