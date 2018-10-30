@@ -18,10 +18,19 @@ html
                     li.nav-item.active
                         a.nav-link(href='/artykuly/dodaj') Dodaj artykuł
                 ul.navbar-nav
-                    li.nav-item
-                        a.nav-link(href='/uzytkownicy/rejestracja') Rejestracja
-                    li.nav-item.text-nowrap
-                        a.nav-link(href='/uzytkownicy/logowanie') Logowanie
+                    if user
+                        li.nav-item 
+                            a.nav-link(href='/users/logout') Logout
+                    else
+                        li.nav-item
+                            a.nav-link(href='/users/register') Register
+                        li.nav-item.text-nowrap
+                            a.nav-link(href='/users/login') Login
+                            //- li.nav-item
+                            //-     a.nav-link(href='/uzytkownicy/rejestracja') Rejestracja
+                            //- li.nav-item.text-nowrap
+                            //-     a.nav-link(href='/uzytkownicy/logowanie') Logowanie
+
         .container
             != messages('message', locals)
             if errors
