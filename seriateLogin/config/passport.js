@@ -15,20 +15,14 @@ module.exports = function(passport){
             }
         }).then( function(user){
             if(!user[0]){
-                return done(null, false, {message: 'No user found'});
+                return done(null, false, {message: 'Nie znaleziono użytkownika'});
             }
-    
-            // console.log(user[0]);
-            // console.log(user[0].password);
-            // console.log(password);
-            // Match password
             bcrypt.compare(password, user[0].password, function(err, isMatch){
                 // console.log('isMatch: ' + isMatch);
-                // console.log('err: ' + err);
                 if(isMatch){
                     return done(null, user[0]);
                 } else {
-                    return done(null, false, {message: 'Wrong password'});
+                    return done(null, false, {message: 'Niepoprawne hasło'});
                 }
             });
         }, function (err){
@@ -37,28 +31,21 @@ module.exports = function(passport){
     }));
   
     passport.serializeUser(function(user, done) {
-        // console.log('serializeUser: '+user.id);
         done(null, user.id);
     });
   
     passport.deserializeUser(function(id, done) {
-        // console.log('deserializeUser: id: '+id);
         sql.execute({
             query: sql.fromFile('../sql/users/userById'),
             params: {
                 id: {	type: sql.INT, val: id }
             }
         }).then( function(user){
-            console.log('deserializeUser: user: '+user);
+            // console.log('deserializeUser: user: '+user);
             done(null, user);
         }, function (err){
-            // console.log ('Coś się stało: deserializeUser: ', err);
             done(err, undefined);
         });
-
-        // User.findById(id, function(err, user) {
-        //     done(err, user);
-        // });
     });
 }
   
