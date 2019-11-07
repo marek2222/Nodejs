@@ -1,0 +1,56 @@
+Czym jest GraphQL?
+https://fsgeek.pl/post/czym-jest-graphql/
+
+
+Zainstaluj:
+    yarn add express express-graphql graphql
+    npm install eslint
+    npm init
+    
+Dodaj plik: index.js
+
+
+
+index.js
+---------------------------
+var express = require('express');
+var graphqlHTTP = require('express-graphql');
+var { buildSchema } = require('graphql');
+
+var schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+var root = {
+  hello: () => {
+    return 'Hello world!';
+  },
+};
+
+var app = express();
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true,
+}));
+app.listen(4000);
+console.log('Running a GraphQL API server at localhost:4000/graphql');
+
+
+------------------------
+Uruchom przez: 
+    node index.js
+
+lub wpisz w package.json:
+  "scripts": {
+    "start": "node index.js"
+  },
+
+i uruchom serwer przez:
+    npm start
+
+
+
+
